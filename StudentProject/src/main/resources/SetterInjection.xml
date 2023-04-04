@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"> <!-- bean definitions here -->
+
+    <bean id="Student" class="org.exampleSetterInjection.Student">
+        <property name="id" value="12"/>
+        <property name="name" value="Lucia Onica"/>
+        <property name="add" ref="Address"/>
+
+        <property name="ph">
+            <list>
+                <ref bean="Phone1" />
+                <ref bean="Phone2" />
+                <ref bean="Phone3" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="Phone1" class="org.exampleSetterInjection.Phone">
+        <property name="mob"  value="123456789"/>
+    </bean>
+
+    <bean id="Phone2" class="org.exampleSetterInjection.Phone">
+        <property name="mob"  value="987654321"/>
+    </bean>
+
+    <bean id="Phone3" class="org.exampleSetterInjection.Phone">
+        <property name="mob"  value="456123789"/>
+    </bean>
+
+    <bean id="Address" class="org.exampleSetterInjection.Address">
+        <property name="city" value="Westmont"/>
+        <property name="state" value="IL"/>
+        <property name="country" value="USA"/>
+        <property name="zipCode" value="60559"/>
+    </bean>
+</beans>
