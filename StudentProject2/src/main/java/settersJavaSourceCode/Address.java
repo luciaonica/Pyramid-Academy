@@ -1,10 +1,10 @@
 package settersJavaSourceCode;
 
 public class Address {
-    private String city = "Westmont";
-    private String state = "IL";
-    private String country = "USA";
-    private String zipCode = "60559";
+    private String city;
+    private String state;
+    private String country;
+    private String zipCode;
 
     public String getCity() {
         return city;

@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class Student {
-    private int id= 12;
-    private String name ="Lucia";
+    private int id;
+    private String name;
 
     @Autowired
     private List<Phone> ph;
@@ -34,13 +34,9 @@ public class Student {
         return ph;
     }
 
-    @Autowired
+
     public void setPh(List<Phone> ph) {
-        Phone ph1 = new Phone();
-        ph1.setMob("12345");
-        Phone ph2 = new Phone();
-        ph2.setMob("65412");
-        this.ph = List.of(ph1, ph2);
+        this.ph = ph;
     }
 
     public Address getAdd() {
