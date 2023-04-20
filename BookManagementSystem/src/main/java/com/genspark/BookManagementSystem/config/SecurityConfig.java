@@ -1,22 +1,17 @@
 package com.genspark.BookManagementSystem.config;
 
-import com.genspark.BookManagementSystem.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.genspark.BookManagementSystem.service.UserInfoUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -28,58 +23,27 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Autowired
-    UserRepository userRepository;
-
     @Bean
-    public UserDetailsService userDetailsService(){
-
-        List<com.genspark.BookManagementSystem.entity.User> users = userRepository.findAll();
-        List<UserDetails> details = new ArrayList<>();
-
-        for (var u : users){
-            UserDetails ue = User
-                    .withUsername(u.getEmail())
-                    .password(u.getPassword())
-                    .roles(u.getRole())
-                    .build();
-            details.add(ue);
-        }
-
-        return new InMemoryUserDetailsManager(details);
+    //authentication
+    public UserDetailsService userDetailsService() {
+        return new UserInfoUserDetailsService();
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/home/viewbooks")
-                .hasAnyRole("ADMIN", "NORMAL")
-                .requestMatchers("/home/users/**", "home/books/**")
-                .hasRole("ADMIN")
-                .requestMatchers("/home/public")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
+                .requestMatchers("/welcome", "/users/**", "/books/delete/**", "/books/add").permitAll()
                 .and()
-                .formLogin();
-        return httpSecurity.build();
+                .authorizeHttpRequests().requestMatchers("/books/**")
+                .authenticated().and().formLogin().and().build();
     }
 
-    //I tested put, post, and delete methods without security
-
-    /*@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/home/viewbooks")
-                .hasAnyRole("ADMIN", "NORMAL")
-                .requestMatchers("/home/public", "/home/users/**", "home/books/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .formLogin();
-        return httpSecurity.build();
-    }*/
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
 }

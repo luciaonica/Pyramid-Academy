@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Book {
+public class UserInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int bookId;
-    private String title;
-    private String author;
-
+    private int id;
+    private String name;
+    private String email;
+    private String password;
+    private String roles;
 }

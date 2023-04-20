@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
-    @Query(value = "SELECT b.* FROM books b INNER JOIN issues i ON b.book_id = i.book_id WHERE i.user_id = :userId", nativeQuery = true)
+    @Query(value = "SELECT b.* FROM book b INNER JOIN issues i ON b.book_id = i.book_id WHERE i.user_id = :userId", nativeQuery = true)
     List<Book> findByUserId(@Param("userId") int userId);
 }
